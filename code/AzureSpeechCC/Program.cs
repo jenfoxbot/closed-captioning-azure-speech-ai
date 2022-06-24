@@ -5,8 +5,8 @@ using Microsoft.CognitiveServices.Speech.Audio;
 class Program
 {
 
-    static string YourSubscriptionKey = "3dc9d7132710499d89fdbd48c5b3f09f";
-    static string YourServiceRegion = "westus2";
+    static string YourSubscriptionKey = "ENTERYOURSUBSCRIPTIONKEY";
+    static string YourServiceRegion = "ENTERYOURSERVICEREGION";
 
     async static Task Main(string[] args)
     {

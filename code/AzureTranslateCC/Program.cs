@@ -4,8 +4,8 @@ using Microsoft.CognitiveServices.Speech.Translation;
 
 class Program
 {
-    static string YourSubscriptionKey = "3dc9d7132710499d89fdbd48c5b3f09f";
-    static string YourServiceRegion = "westus2";
+    static string YourSubscriptionKey = "ENTERYOURSUBSCRIPTIONKEY";
+    static string YourServiceRegion = "ENTERYOURSERVICEREGION";
 
     // Define the speech detection and translation languages.
     const string recognitionLanguage = "en-US"; // https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support?tabs=speechtotext#speech-to-text
