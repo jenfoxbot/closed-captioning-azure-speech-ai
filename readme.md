@@ -7,7 +7,10 @@ https://user-images.githubusercontent.com/46184494/172901241-2b21438e-2600-4397-
 
 Speech is captured via a USB microphone and run through a .NET framework which calls Azure Cognitive Services speech-to-text service, which then displays convert text in real-time captions to an LCD screen. You can also generate captions on [a remote screen via SSH](https://github.com/microsoft/rpi-resources). 
 
-   * *You can sign up for a [free 30-day trial of Azure](https://aka.ms/azure/live-captions) w/ $200 in credits to test out this project.*
+***Privacy Note: This project does NOT store captions.** If you use this to generate in-person captions, please be sure to inform all speakers that they are being transcribed but not recorded.*
+
+
+**You can sign up for a [free 30-day trial of Azure](https://aka.ms/azure/live-captions) w/ $200 in credits to test out this project.*
 
 **Read Time**: 10 min
 
@@ -82,16 +85,21 @@ Note: We recommend using the Ubuntu 22 64 bit OS because it has better support f
 This section covers how to connect peripheral devices, like a screen, keyboard, and mouse, to our Raspberry Pi.
 
    1. If you're using a screen, connect the display via USB and HDMI ports.
+
       ![hdmidisplay.png](assets/hdmidisplay.png)
+      
       ![mhdmi.png](assets/mhdmi.png)
 
    1. Connect Micro-USB (Display) to USB (RaspberryPi)
+
       ![musbdisplay.png](assets/musbdisplay.png)
+
       ![usbdisplay.png](assets/usbdisplay.png)
 
    1. Connect the  USB Mic to a Pi USB port.
       
       ![mic.png](assets/mic.png)
+
       ![micusb.png](assets/micusb.png)
 
    1. Connect the keyboard and mouse. We're using a wireless dongle for both keyboard and mouse.
@@ -213,7 +221,7 @@ The following section shows you how to run the project on your Raspberry Pi. **F
       ```
       * *Note: Once you've build the .NET Framework, you can run the program with only this command: 
       ```bash
-         dotnet run
+      dotnet run
       ```
 Test out different audio sources, try different sounds and voices, and explore the capabilities and limits of the live speech-to-text translation!
 
