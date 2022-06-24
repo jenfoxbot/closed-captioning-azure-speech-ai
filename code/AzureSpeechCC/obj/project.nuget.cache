@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "j1pndcLNgJWcgZ97z2CdnYNrKlmBPX2wz9jtnFNssTBRm7mb7vMsfFA6FUlpCIFNn8JSkmdHYINV7TJK+P6MTQ==",
+  "success": true,
+  "projectFilePath": "C:\\src\\closed-captioning-azure-speech-ai\\code\\AzureSpeechCC\\AzureSpeechCC.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\adribona\\.nuget\\packages\\microsoft.cognitiveservices.speech\\1.21.0\\microsoft.cognitiveservices.speech.1.21.0.nupkg.sha512"
+  ],
+  "logs": []
+}
