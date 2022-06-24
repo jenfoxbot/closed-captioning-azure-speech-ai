@@ -1,98 +1,96 @@
-﻿using System.Collections.Concurrent;
-using Microsoft.CognitiveServices.Speech;
+﻿using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
-using Microsoft.CognitiveServices.Speech.Translation;
+
 
 class Program
 {
-    static string YourSubscriptionKey = "58759f1e03cd476e88d4baeb2e1bec73";
+
+    static string YourSubscriptionKey = "3dc9d7132710499d89fdbd48c5b3f09f";
     static string YourServiceRegion = "westus2";
 
     async static Task Main(string[] args)
     {
-        // Define the speech detection and translation languages.
-        // https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support?tabs=speechtotext#speech-to-text
-        const string recognitionLanguage = "en-US";
-        // https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/language-support?tabs=speechtotext#speech-translation
-        const string translationLanguage = "es"; 
+        var recognitionEnd = new TaskCompletionSource<string?>();
 
-        // Support objects for asynchronous output to the console.
-        using var cancellationTokenSource = new CancellationTokenSource();
-        using var messageReady = new Semaphore(0,1);
-        var messageQueue = new ConcurrentQueue<string>();
-
-        // Setup speech translation objects.
-        var speechTranslationConfig = SpeechTranslationConfig.FromSubscription(YourSubscriptionKey, YourServiceRegion);
-        speechTranslationConfig.SpeechRecognitionLanguage = recognitionLanguage;
-        speechTranslationConfig.AddTargetLanguage(translationLanguage);
+        var speechConfig = SpeechConfig.FromSubscription(YourSubscriptionKey, YourServiceRegion);
+        speechConfig.SpeechRecognitionLanguage = "en-US";
 
         using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
-        using var speechRecognizer = new TranslationRecognizer(speechTranslationConfig, audioConfig);
+        using var speechRecognizer = new SpeechRecognizer(speechConfig, audioConfig);
 
-        speechTranslationConfig.SetProperty(PropertyId.SpeechServiceResponse_PostProcessingOption, "2");      
-        
-        // A new translated message has been received from cognitive services.
-        speechRecognizer.Recognized += (object? sender, TranslationRecognitionEventArgs e) =>
+        speechConfig.SetProperty(PropertyId.SpeechServiceResponse_PostProcessingOption, "2");
+
+        speechRecognizer.Recognizing += (object? sender, SpeechRecognitionEventArgs e) =>
             {
-                if (e.Result.Reason == ResultReason.TranslatedSpeech)
+                if (ResultReason.RecognizingSpeech == e.Result.Reason && e.Result.Text.Length > 0)
                 {
-                    messageQueue.Enqueue(e.Result.Translations[translationLanguage]);
-                    messageReady.Release();
+
+                    Console.Clear();
+                    Console.WriteLine($"{e.Result.Text}");
                 }
                 else if (ResultReason.NoMatch == e.Result.Reason)
                 {
-                    Console.Error.WriteLine($"(Speech could not be recognized.)");
+                    Console.WriteLine($"NOMATCH: Speech could not be recognized.{Environment.NewLine}");
+                }
+
+            };
+        speechRecognizer.Recognized += (object? sender, SpeechRecognitionEventArgs e) =>
+            {
+
+                if (ResultReason.RecognizingSpeech == e.Result.Reason && e.Result.Text.Length > 0)
+                {
+
+                    Console.Clear();
+                    Console.WriteLine($"{e.Result.Text}");
+                }
+                else if (ResultReason.NoMatch == e.Result.Reason)
+                {
+                    Console.WriteLine($"NOMATCH: Speech could not be recognized.{Environment.NewLine}");
                 }
             };
 
-        // The speech recognizer was cancelled.
-        speechRecognizer.Canceled += (object? sender, TranslationRecognitionCanceledEventArgs e) =>
+        speechRecognizer.Canceled += (object? sender, SpeechRecognitionCanceledEventArgs e) =>
             {
-                if (CancellationReason.Error == e.Reason)
+                if (CancellationReason.EndOfStream == e.Reason)
+                {
+                    Console.WriteLine($"End of stream reached.{Environment.NewLine}");
+                    recognitionEnd.TrySetResult(null); 
+                }
+                else if (CancellationReason.CancelledByUser == e.Reason)
+                {
+                    Console.WriteLine($"User canceled request.{Environment.NewLine}");
+                    recognitionEnd.TrySetResult(null); 
+                }
+                else if (CancellationReason.Error == e.Reason)
                 {
                     var error = $"Encountered error.{Environment.NewLine}Error code: {(int)e.ErrorCode}{Environment.NewLine}Error details: {e.ErrorDetails}{Environment.NewLine}";
                     Console.WriteLine($"{error}");
-                    cancellationTokenSource.Cancel();
+                    recognitionEnd.TrySetResult(error); 
                 }
-                else {
-                    Console.WriteLine(e.Reason);
-                    cancellationTokenSource.Cancel();
+                else
+                {
+                    var error = $"Request was cancelled for an unrecognized reason: {(int)e.Reason}.{Environment.NewLine}";
+                    Console.WriteLine($"{error}");
+                    recognitionEnd.TrySetResult(error); 
                 }
             };
 
-        // The speech recognition session has stopped.
         speechRecognizer.SessionStopped += (object? sender, SessionEventArgs e) =>
             {
+                
                 Console.WriteLine($"Session stopped.{Environment.NewLine}");
-                cancellationTokenSource.Cancel();
+                recognitionEnd.TrySetResult(null); 
             };
 
-        var printResultsTask = Task.Run(async () => {
-            try {
-                while(messageReady.WaitOne())
-                {
-                    if (messageQueue.TryDequeue(out string? result) && result != null)
-                    {
-                        Console.WriteLine(result);
-                    }
-                    await Task.Delay(0);
-                }
-            }
-            catch (OperationCanceledException) {
-                // Expected when exiting.
-            }
-        }, cancellationTokenSource.Token);
-
-        // Start the speech listener.
+        Console.WriteLine($"Ready");
         await speechRecognizer.StartContinuousRecognitionAsync().ConfigureAwait(false);
-        
-        // Inform the user we are ready for input.
-        Console.WriteLine($"--Speak--");
-        
+        Console.WriteLine($"Speak");
         // Waits for recognition end.
-        Task.WaitAll(new[] { printResultsTask });
+        Task.WaitAll(new[] { recognitionEnd.Task });
 
-        // Stop the listener.
+        // Stops recognition.
         await speechRecognizer.StopContinuousRecognitionAsync().ConfigureAwait(false);
+
+        return ;
     }
 }
