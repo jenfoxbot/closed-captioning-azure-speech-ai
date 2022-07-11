@@ -1,11 +1,13 @@
 # Raspberry Pi Live Closed Captioning with Azure Cognitive Services
 
 
-This project uses Microsoft Azure Cognitive Services speech recognition to generate real-time captions on a Raspberry Pi. You can also run this project in a .NET framework on a laptop or computer!
+This repo contains two projects, both supporting the Raspberry Pi and desktop platforms via .NET 6: 
+- AzureSpeechCC: This project uses Microsoft Azure Cognitive Services speech recognition to generate real-time captions.
+- AzureTranslateCC: This project uses Microsoft Azure Cognitive Services speech recognition and translation to generate real-time translations.
 
 https://user-images.githubusercontent.com/46184494/172901241-2b21438e-2600-4397-a6b6-4cd5b5c7c63d.mp4
 
-Speech is captured via a USB microphone and run through a .NET framework which calls Azure Cognitive Services speech-to-text service, which then displays convert text in real-time captions to an LCD screen. You can also generate captions on [a remote screen via SSH](https://github.com/microsoft/rpi-resources). 
+Speech is captured via a USB microphone and, using .NET 6, calls Azure Cognitive Services speech-to-text service, which then displays recognized (or translated) text in real-time captions to an LCD screen. You can also generate captions on [a remote screen via SSH](https://github.com/microsoft/rpi-resources). 
 
    * *You can sign up for a [free 30-day trial of Azure](https://aka.ms/azure/live-captions) w/ $200 in credits to test out this project.*
 
@@ -13,16 +15,20 @@ Speech is captured via a USB microphone and run through a .NET framework which c
 
 **Build Time**: 20 min (excluding installation times)
 
-**Cost**:
+**Speech-to-text Cost**:
    * **Free Tier** (1 concurrent request): 5 free audio hours per month
    * **Standard Tier** (100 concurrent requests): $1 per audio hour
+   * Check the [Azure pricing page](https://azure.microsoft.com/en-us/pricing/details/cognitive-services/speech-services/) for details on paid tiers.
+
+**Translation Cost**:
+   * **Free Tier** 2M chars of any combination of standard translation and custom training free per month
+   * Check the [Azure pricing page](https://azure.microsoft.com/en-us/pricing/details/cognitive-services/translator/) for details on paid tiers.
 
 [More info on cost here.](https://aka.ms/azure/live-caption/cost)
 
 **Many thanks** to the original developer of this open source project: [Mohsin Ali](https://www.linkedin.com/in/mmohsinali)! You can see Mohsin's other GitHub projects here: [m-mohsin-ali (M Mohsin Ali)](https://github.com/m-mohsin-ali)
 
 ## Contents
-
 
 ## Hardware Requirements
 1. [Raspberry Pi](https://thepihut.com/collections/featured-products/products/raspberry-pi-4-model-b) 
@@ -124,7 +130,7 @@ This section shows you how to install dependencies for the project onto your Ras
       echo 'export PATH=$PATH:$HOME/.dotnet' >> ~/.bashrc
       source ~/.bashrc
       ```
-   1. Check and verify the installation
+   1. Verify the installation
       ```bash
       dotnet --version
       ```
@@ -187,6 +193,10 @@ The following section shows you how to run the project on your Raspberry Pi. **F
       ```bash
       cd closed-captioning-azure-speech-ai/code/AzureSpeechCC
       ```
+      OR
+      ```bash
+      cd closed-captioning-azure-speech-ai/code/AzureTranslateCC
+      ```
 
    1. Add your Cognitive Services keys to the code:
       ```bash
@@ -211,17 +221,13 @@ The following section shows you how to run the project on your Raspberry Pi. **F
       dotnet build
       dotnet run
       ```
-      * *Note: Once you've build the .NET Framework, you can run the program with only this command: 
+      * *Note: Once you've built, you can run the program with only this command: 
       ```bash
          dotnet run
       ```
 Test out different audio sources, try different sounds and voices, and explore the capabilities and limits of the live speech-to-text translation!
 
 ## Going Further
-   1. Make the project portable by getting an enclosure for the Pi, a small touch screen, and a USB-C battery.
-   1. Travel plans? Convert the project into a translator by selecting different language inputs and outputs from Cognitive Services!
-
+   - Make the project portable by getting an enclosure for the Pi, a small touch screen, and a USB-C battery.
+   
 **Show us your creations by tagging us on Twitter, @MakersAtMicrosoft, or using the hashtag #AzureLiveCaptions!**
-
-
-
