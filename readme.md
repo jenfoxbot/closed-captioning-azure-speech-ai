@@ -151,11 +151,12 @@ This section shows you how to install dependencies for the project onto your Ras
 
    * We need to manually install the libssl1.0.0 as its not available for ubuntu 22. Run the following command:
       ```bash
-      wget http://ftp.us.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1n-0+deb11u1_arm64.deb
+      wget http://ftp.us.debian.org/debian/pool/main/o/openssl/libssl1.1_1.1.1n-0+deb11u3_arm64.deb
       ```
+      If the file is not found, open http://ftp.us.debian.org/debian/pool/main/o/openssl/ in your web browser to find the most recent version.
    * Next, install from file:
       ```bash
-      sudo apt install -f ./libssl1.1_1.1.1n-0+deb11u1_arm64.deb
+      sudo apt install -f ./libssl1.1_1.1.1n-0+deb11u3_arm64.deb
       ```
 ## Set up Azure Cognitive Services 
 Now it's time to sign up for Azure Cognitive Services and get our API keys! 
@@ -218,6 +219,7 @@ The following section shows you how to run the project on your Raspberry Pi. **F
             static string YourServiceRegion = "Enter your Region here";
       ...
       ```
+      Note that your service region should not contain spaces (e.g. "WestUS2").
    1. Press CTRL+X and save/overwrite the file.
 
    1. Add the Azure Speech SDK lib/package to the code directory by running the following:
