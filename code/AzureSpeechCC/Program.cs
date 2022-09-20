@@ -37,7 +37,7 @@ class Program
         speechRecognizer.Recognized += (object? sender, SpeechRecognitionEventArgs e) =>
             {
 
-                if (ResultReason.RecognizingSpeech == e.Result.Reason && e.Result.Text.Length > 0)
+                if (ResultReason.RecognizedSpeech == e.Result.Reason && e.Result.Text.Length > 0)
                 {
 
                     Console.Clear();
